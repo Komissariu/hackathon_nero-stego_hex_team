@@ -1,4 +1,3 @@
-
 package com.example.fluffydisco.service
 
 import android.app.*
@@ -19,9 +18,11 @@ import com.example.fluffydisco.data.local.FluffyDiscoDatabase
 import com.example.fluffydisco.data.local.RecordingEntity
 import com.example.fluffydisco.data.transcription.TranscriptionScheduler
 import java.util.UUID
+import kotlin.time.Duration.Companion.milliseconds
 
 class RecordingService : Service() {
     private var recordingStartedAt = 0L
+
     companion object {
         const val ACTION_START =
             "com.example.fluffydisco.START_RECORDING"
@@ -41,6 +42,7 @@ class RecordingService : Service() {
 
     private var active = false
     private var saving = false
+    private var amplitudeJob: Job? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -78,10 +80,15 @@ class RecordingService : Service() {
             recorder.start()
             recordingStartedAt = SystemClock.elapsedRealtime()
             active = true
+
+            RecordingState.resetAmplitudes()
+
             RecordingState.update(
                 RecordingStatus.RECORDING,
-                SystemClock.elapsedRealtime()
+                recordingStartedAt
             )
+
+            startAmplitudeMonitoring()
         } catch (e: Exception) {
             android.util.Log.e(
                 "RecordingService",
@@ -94,11 +101,28 @@ class RecordingService : Service() {
         }
     }
 
+    private fun startAmplitudeMonitoring() {
+        amplitudeJob?.cancel()
+
+        amplitudeJob = serviceScope.launch {
+            while (active) {
+                val amplitude = recorder.getMaxAmplitude()
+
+                RecordingState.addAmplitude(amplitude)
+
+                delay(50.milliseconds)
+            }
+        }
+    }
+
     private fun stopRecording() {
         if (!active || saving) return
 
         active = false
         saving = true
+
+        amplitudeJob?.cancel()
+        amplitudeJob = null
 
         val durationMs =
             SystemClock.elapsedRealtime() - recordingStartedAt
@@ -142,6 +166,7 @@ class RecordingService : Service() {
                 )
             } finally {
                 saving = false
+                RecordingState.resetAmplitudes()
                 RecordingState.update(RecordingStatus.IDLE)
                 stopSelf()
             }

@@ -52,6 +52,10 @@ class AudioRecorder(
         }
     }
 
+    fun getMaxAmplitude(): Int {
+        return recorder?.maxAmplitude ?: 0
+    }
+
     fun stop(): File {
         val activeRecorder =
             recorder ?: error("No active recording")
