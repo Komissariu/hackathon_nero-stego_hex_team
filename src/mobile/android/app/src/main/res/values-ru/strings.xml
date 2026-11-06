@@ -1,0 +1,83 @@
+<resources>
+    <string name="app_name">FluffyDisco</string>
+
+    <string name="nav_record">Запись</string>
+    <string name="nav_history">История</string>
+    <string name="navigate_back">Назад</string>
+
+    <string name="recorder_title">Новая запись</string>
+    <string name="recorder_hint">Нажмите, чтобы начать запись</string>
+    <string name="recorder_start">Начать запись</string>
+    <string name="recorder_stop">Остановить запись</string>
+    <string name="recorder_import">Импортировать аудиофайл</string>
+    <string name="recorder_ready">Готово к записи</string>
+    <string name="recorder_subtitle">Записывайте разговоры и превращайте их в текст</string>
+
+    <string name="history_title">Мои записи</string>
+    <string name="history_subtitle">Все ваши разговоры в одном месте</string>
+    <string name="history_empty_title">Записей пока нет</string>
+    <string name="history_empty_description">Здесь появятся ваши записи</string>
+    <string name="history_transcribed">Расшифровано</string>
+    <string name="history_pending">Не расшифровано</string>
+
+    <string name="transcript_title">Расшифровка</string>
+    <string name="transcript_demo">Демонстрационная расшифровка</string>
+    <string name="transcript_speaker">Участник %1$d</string>
+    <string name="transcript_recording_id">Запись №%1$s</string>
+
+    <string name="demo_recording_project">Обсуждение проекта</string>
+    <string name="demo_recording_meeting">Встреча команды</string>
+    <string name="demo_recording_new">Новая запись</string>
+
+    <string name="demo_line_1">Добрый день!</string>
+    <string name="demo_line_2">Здравствуйте!</string>
+    <string name="demo_line_3">Давайте обсудим наш проект.</string>
+    <string name="demo_line_4">Предлагаю начать с интерфейса.</string>
+
+    <string name="nav_settings">Настройки</string>
+    <string name="settings_title">Хранение файлов</string>
+    <string name="settings_description">Выберите, куда FluffyDisco будет сохранять аудиозаписи.</string>
+    <string name="settings_default_folder">По умолчанию: Music/FluffyDisco</string>
+    <string name="settings_custom_folder">Выбрана пользовательская папка</string>
+    <string name="settings_choose_folder">Выбрать папку</string>
+    <string name="settings_reset_folder">Использовать стандартную папку</string>
+    <string name="settings_folder_error">Не удалось получить доступ к папке</string>
+
+    <string name="recorder_recording">Идёт запись…</string>
+    <string name="recorder_saved">Запись сохранена</string>
+    <string name="recorder_error">Не удалось сохранить запись</string>
+    <string name="recorder_permission_required">Для записи нужен доступ к микрофону</string>
+    <string name="recorder_status_idle">Готово к записи</string>
+    <string name="recorder_status_recording">Идёт запись</string>
+
+    <string name="notification_channel_name">Запись аудио</string>
+    <string name="notification_recording_title">FluffyDisco записывает звук</string>
+    <string name="notification_recording_text">Идёт фоновая запись аудио</string>
+    <string name="notification_stop">Остановить</string>
+    <string name="recorder_saving">Сохранение записи…</string>
+
+    <string name="status_recorded">Записано</string>
+    <string name="status_processing">Обработка…</string>
+    <string name="status_transcribed">Расшифровано</string>
+    <string name="status_failed">Ошибка обработки</string>
+    <string name="transcript_not_ready">Расшифровка пока недоступна</string>
+    <string name="transcript_demo_warning">Демонстрационная расшифровка — не создана по аудио</string>
+    <string name="transcript_missing">Запись не найдена</string>
+
+    <string name="import_success">Аудиофайл успешно импортирован</string>
+    <string name="import_error">Не удалось импортировать аудио</string>
+    <string name="import_unsupported">Пока поддерживается только аудио M4A</string>
+
+    <string name="status_queued">В очереди на расшифровку</string>
+
+    <string name="recording_more_options">Дополнительные действия</string>
+    <string name="recording_rename">Переименовать</string>
+    <string name="recording_rename_title">Переименовать запись</string>
+    <string name="recording_name">Название записи</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_save">Сохранить</string>
+    <string name="recording_play">Воспроизвести запись</string>
+    <string name="recording_pause">Приостановить запись</string>
+    <string name="recording_loading">Загрузка аудио</string>
+    <string name="recording_playback_error">Не удалось воспроизвести аудио</string>
+</resources>
