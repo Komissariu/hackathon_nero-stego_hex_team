@@ -20,6 +20,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fluffydisco.R
 import com.example.fluffydisco.ui.theme.AppRecording
+import androidx.compose.foundation.Canvas
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.unit.dp
+import com.example.fluffydisco.service.RecordingState
 
 private fun formatDuration(seconds: Long): String {
     return "%02d:%02d".format(
@@ -59,7 +66,9 @@ fun RecorderScreen(
 
         Spacer(Modifier.weight(1f))
 
-        WaveformPlaceholder()
+        RecordingWaveform(
+            isRecording = isRecording
+        )
 
         Spacer(Modifier.height(28.dp))
 
@@ -150,28 +159,52 @@ fun RecorderScreen(
 }
 
 @Composable
-private fun WaveformPlaceholder() {
-    val heights = listOf(
-        12, 20, 32, 18, 42, 55, 28,
-        46, 68, 35, 22, 54, 72, 40,
-        25, 58, 36, 18, 48, 30, 14
-    )
+private fun RecordingWaveform(
+    isRecording: Boolean
+) {
+    val amplitudes by RecordingState.amplitudes.collectAsState()
 
-    Row(
+    val activeColor = MaterialTheme.colorScheme.primary
+    val idleColor = activeColor.copy(alpha = 0.2f)
+
+    Canvas(
         modifier = Modifier
             .fillMaxWidth()
-            .height(90.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+            .height(90.dp)
     ) {
-        heights.forEach { height ->
-            Box(
-                modifier = Modifier
-                    .padding(horizontal = 2.dp)
-                    .width(4.dp)
-                    .height(height.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary)
+        val centerY = size.height / 2f
+        val slotCount = RecordingState.MAX_SAMPLES
+        val slotWidth = size.width / slotCount
+        val barWidth = slotWidth * 0.45f
+        val minBarHeight = 3.dp.toPx()
+
+        // Сдвиг вправо: сколько слотов ещё "не заполнено"
+        val offset = slotCount - amplitudes.size
+
+        repeat(slotCount) { i ->
+            val sampleIndex = i - offset
+            val value = if (sampleIndex >= 0) {
+                amplitudes[sampleIndex].coerceIn(0f, 1f)
+            } else {
+                0f
+            }
+            val barHeight = (size.height * value)
+                .coerceAtLeast(minBarHeight)
+
+            val color = when {
+                sampleIndex < 0 -> idleColor
+                isRecording -> activeColor
+                else -> activeColor.copy(alpha = 0.5f)
+            }
+
+            val x = slotWidth * i + slotWidth / 2f
+
+            drawLine(
+                color = color,
+                start = Offset(x, centerY - barHeight / 2f),
+                end = Offset(x, centerY + barHeight / 2f),
+                strokeWidth = barWidth,
+                cap = StrokeCap.Round
             )
         }
     }
