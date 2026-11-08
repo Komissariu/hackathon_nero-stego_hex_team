@@ -40,3 +40,14 @@ artifacts/demo/*.mov
 artifacts/demo/*.mkv
 artifacts/demo/*.wav
 
+
+# Private models and Android local outputs
+.kotlin/
+local.properties
+*.jks
+*.keystore
+*.apk
+*.aab
+/src/mobile/android/local-models/
+ecapa_ru.onnx
+ecapa_ru.onnx.data

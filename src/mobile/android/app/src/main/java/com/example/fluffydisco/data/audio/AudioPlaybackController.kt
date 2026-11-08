@@ -1,4 +1,3 @@
-
 package com.example.fluffydisco.data.audio
 
 import android.content.Context
@@ -132,8 +131,4 @@ class AudioPlaybackController(
     fun release() {
         stop()
     }
-
-    // TODO: Add seek bar and playback position.
-    // TODO: Handle audio focus and interruptions.
-    // TODO: Migrate to Media3 for advanced playback features.
 }

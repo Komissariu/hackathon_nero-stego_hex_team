@@ -33,12 +33,14 @@ import com.example.fluffydisco.service.RecordingService
 import com.example.fluffydisco.service.RecordingState
 import com.example.fluffydisco.service.RecordingStatus
 import com.example.fluffydisco.data.audio.AudioImportProcessor
+import com.example.fluffydisco.ui.settings.ModelDownloadsScreen
+import com.example.fluffydisco.ui.settings.ModelSelectionScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.time.Duration.Companion.milliseconds
 
 private val SUPPORTED_AUDIO_TYPES = setOf(
-    "audio/mp4", "audio/x-m4a", "audio/m4a"
+    "audio/mp4", "audio/x-m4a", "audio/m4a", "audio/mpeg"
 )
 
 @Composable
@@ -90,7 +92,10 @@ fun AppNavigation() {
                             } else null
                         }
                         mimeType in SUPPORTED_AUDIO_TYPES ||
-                                fileName?.endsWith(".m4a", ignoreCase = true) == true
+                                fileName?.let {
+                                    it.endsWith(".m4a", ignoreCase = true) ||
+                                            it.endsWith(".mp3", ignoreCase = true)
+                                } == true
                     }
 
                     if (!supported) {
@@ -159,6 +164,7 @@ fun AppNavigation() {
 
         context.startService(intent)
     }
+
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
@@ -276,9 +282,30 @@ fun AppNavigation() {
             }
 
             composable("settings") {
-                StorageSettingsScreen()
+                StorageSettingsScreen(
+                    onOpenModelSelection = {
+                        navController.navigate("model_selection")
+                    },
+                    onOpenModelDownloads = {
+                        navController.navigate("model_downloads")
+                    }
+                )
+            }
+            composable("model_selection") {
+                ModelSelectionScreen(
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
             }
 
+            composable("model_downloads") {
+                ModelDownloadsScreen(
+                    onBack = {
+                        navController.popBackStack()
+                    }
+                )
+            }
             composable("transcript/{id}") { entry ->
                 val id = entry.arguments
                     ?.getString("id")

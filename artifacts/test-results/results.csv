@@ -1,3 +1,5 @@
-test_id,timestamp_utc,commit,file_name,file_size_bytes,duration_seconds,distance_meters,noise_condition,noise_level_db,attempt,success,checksum_match,device_tx,device_rx,notes
-example-001,2026-01-01T00:00:00Z,replace-me,sample.txt,128,1.23,1.0,quiet-room,35,1,true,true,replace-me,replace-me,DELETE THIS EXAMPLE ROW
-
+test_id,date,revision,device,scenario,status,notes
+python-archive,2026-11-08,bef65db0,Windows,20 archive tooling tests,pass,GigaAM reconstructed and checksum verified
+android-build,2026-11-08,bef65db0,Windows,Gradle unit tests and debug build,pass,56 unit tests and instrumentation sources compiled
+apk-assets,2026-11-08,bef65db0,Windows,Standard debug APK model verification,pass,ECAPA entries absent
+device,2026-11-08,bef65db0,Android,Instrumented and manual scenarios,not_run,No new device result

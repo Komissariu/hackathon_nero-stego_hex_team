@@ -1,5 +1,7 @@
 package com.example.fluffydisco.ui.history
 
+import android.net.Uri
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,6 +9,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.GraphicEq
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -14,24 +19,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.fluffydisco.R
+import com.example.fluffydisco.data.audio.AudioPlaybackController
+import com.example.fluffydisco.data.audio.PlaybackStatus
 import com.example.fluffydisco.data.local.FluffyDiscoDatabase
 import com.example.fluffydisco.data.local.RecordingEntity
 import java.text.DateFormat
 import java.util.Date
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.OutlinedTextField
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import android.widget.Toast
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Pause
-import com.example.fluffydisco.data.audio.AudioPlaybackController
-import com.example.fluffydisco.data.audio.PlaybackStatus
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
+import kotlinx.coroutines.withContext
 
 @Composable
 fun HistoryScreen(
@@ -62,9 +58,46 @@ fun HistoryScreen(
     var recordingToRename by remember {
         mutableStateOf<RecordingEntity?>(null)
     }
+    var recordingToDelete by remember {
+        mutableStateOf<RecordingEntity?>(null)
+    }
+    var transcriptToDelete by remember {
+        mutableStateOf<RecordingEntity?>(null)
+    }
+
     val recordings by remember(dao) {
         dao.observeAll()
     }.collectAsState(initial = emptyList())
+
+    // Удаляем из истории записи, у которых больше нельзя открыть аудио.
+    // Одновременно удаляем связанный JSON, чтобы не оставлять сиротский файл.
+    LaunchedEffect(recordings) {
+        recordings.forEach { item ->
+            val audioExists = withContext(Dispatchers.IO) {
+                runCatching {
+                    context.contentResolver
+                        .openFileDescriptor(Uri.parse(item.audioUri), "r")
+                        ?.use { true } ?: false
+                }.getOrDefault(false)
+            }
+
+            if (!audioExists) {
+                withContext(Dispatchers.IO) {
+                    item.transcriptUri?.let { transcriptUri ->
+                        runCatching {
+                            context.contentResolver.delete(
+                                Uri.parse(transcriptUri),
+                                null,
+                                null
+                            )
+                        }
+                    }
+                }
+
+                dao.deleteById(item.id)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -115,6 +148,12 @@ fun HistoryScreen(
                         onRename = {
                             recordingToRename = recording
                         },
+                        onDelete = {
+                            recordingToDelete = recording
+                        },
+                        onDeleteTranscript = {
+                            transcriptToDelete = recording
+                        },
                         isPlaying =
                             playbackController.activeRecordingId == recording.id &&
                                     playbackController.status == PlaybackStatus.PLAYING,
@@ -137,20 +176,127 @@ fun HistoryScreen(
                     )
                 }
             }
-            recordingToRename?.let { recording ->
-                RenameRecordingDialog(
-                    initialName = recording.title,
-                    onDismiss = {
-                        recordingToRename = null
-                    },
-                    onConfirm = { newName ->
-                        scope.launch {
-                            dao.rename(recording.id, newName)
-                        }
-                        recordingToRename = null
+        }
+
+        recordingToRename?.let { recording ->
+            RenameRecordingDialog(
+                initialName = recording.title,
+                onDismiss = {
+                    recordingToRename = null
+                },
+                onConfirm = { newName ->
+                    scope.launch {
+                        dao.rename(recording.id, newName)
                     }
-                )
-            }
+                    recordingToRename = null
+                }
+            )
+        }
+
+        recordingToDelete?.let { recording ->
+            AlertDialog(
+                onDismissRequest = {
+                    recordingToDelete = null
+                },
+                title = {
+                    Text(stringResource(R.string.delete_recording_title))
+                },
+                text = {
+                    Text(stringResource(R.string.delete_recording_confirmation))
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            recordingToDelete = null
+                            scope.launch {
+                                if (playbackController.activeRecordingId == recording.id) {
+                                    playbackController.stop()
+                                }
+
+                                withContext(Dispatchers.IO) {
+                                    runCatching {
+                                        context.contentResolver.delete(
+                                            Uri.parse(recording.audioUri),
+                                            null,
+                                            null
+                                        )
+                                    }
+
+                                    recording.transcriptUri?.let { transcriptUri ->
+                                        runCatching {
+                                            context.contentResolver.delete(
+                                                Uri.parse(transcriptUri),
+                                                null,
+                                                null
+                                            )
+                                        }
+                                    }
+                                }
+
+                                dao.deleteById(recording.id)
+                            }
+                        }
+                    ) {
+                        Text(stringResource(R.string.recording_delete))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        recordingToDelete = null
+                    }) {
+                        Text(stringResource(R.string.action_cancel))
+                    }
+                }
+            )
+        }
+
+        transcriptToDelete?.let { recording ->
+            AlertDialog(
+                onDismissRequest = {
+                    transcriptToDelete = null
+                },
+                title = {
+                    Text(stringResource(R.string.delete_transcript_title))
+                },
+                text = {
+                    Text(stringResource(R.string.delete_transcript_confirmation))
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            transcriptToDelete = null
+                            scope.launch {
+                                withContext(Dispatchers.IO) {
+                                    recording.transcriptUri?.let { transcriptUri ->
+                                        runCatching {
+                                            context.contentResolver.delete(
+                                                Uri.parse(transcriptUri),
+                                                null,
+                                                null
+                                            )
+                                        }
+                                    }
+                                }
+
+                                dao.updateTranscription(
+                                    id = recording.id,
+                                    status = "RECORDED",
+                                    transcriptUri = null
+                                )
+                            }
+                        }
+                    ) {
+                        Text(stringResource(R.string.transcript_delete))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        transcriptToDelete = null
+                    }) {
+                        Text(stringResource(R.string.action_cancel))
+                    }
+                }
+            )
         }
     }
 }
@@ -160,6 +306,8 @@ private fun RecordingCard(
     recording: RecordingEntity,
     onClick: () -> Unit,
     onRename: () -> Unit,
+    onDelete: () -> Unit,
+    onDeleteTranscript: () -> Unit,
     isPlaying: Boolean,
     isLoading: Boolean,
     onPlayClick: () -> Unit
@@ -226,7 +374,6 @@ private fun RecordingCard(
                 )
             }
 
-            // Кнопка воспроизведения аудио
             IconButton(
                 onClick = onPlayClick,
                 enabled = !isLoading
@@ -260,6 +407,7 @@ private fun RecordingCard(
                     }
                 }
             }
+
             var menuExpanded by remember {
                 mutableStateOf(false)
             }
@@ -287,6 +435,28 @@ private fun RecordingCard(
                         onClick = {
                             menuExpanded = false
                             onRename()
+                        }
+                    )
+
+                    if (recording.transcriptUri != null) {
+                        DropdownMenuItem(
+                            text = {
+                                Text(stringResource(R.string.transcript_delete))
+                            },
+                            onClick = {
+                                menuExpanded = false
+                                onDeleteTranscript()
+                            }
+                        )
+                    }
+
+                    DropdownMenuItem(
+                        text = {
+                            Text(stringResource(R.string.recording_delete))
+                        },
+                        onClick = {
+                            menuExpanded = false
+                            onDelete()
                         }
                     )
                 }

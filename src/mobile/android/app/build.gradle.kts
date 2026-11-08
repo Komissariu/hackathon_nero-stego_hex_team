@@ -4,16 +4,22 @@ plugins {
     alias(libs.plugins.kotlin.ksp)
 }
 
+val restoreGigaAmArchive = tasks.register<RestoreGigaAmArchive>("restoreGigaAmArchive") {
+    manifestFile.set(layout.projectDirectory.file("../model-parts/gigaam/manifest.json"))
+    partsDirectory.set(layout.projectDirectory.dir("../model-parts/gigaam"))
+    outputDirectory.set(layout.buildDirectory.dir("generated/gigaamAssets"))
+}
+
 android {
     namespace = "com.example.fluffydisco"
     compileSdk {
-        version = release(37)
+        version = release(36)
     }
 
     defaultConfig {
         applicationId = "com.example.fluffydisco"
         minSdk = 26
-        targetSdk = 37
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -35,6 +41,18 @@ android {
     buildFeatures {
         compose = true
     }
+    androidResources {
+        noCompress += "7z"
+    }
+}
+
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        variant.sources.assets?.addGeneratedSourceDirectory(
+            restoreGigaAmArchive,
+            RestoreGigaAmArchive::outputDirectory,
+        )
+    }
 }
 
 dependencies {
@@ -53,6 +71,9 @@ dependencies {
     implementation(libs.androidx.documentfile)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.commons.compress)
+    implementation(libs.xz)
+    implementation(libs.onnxruntime.android)
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(this.platform(libs.androidx.compose.bom))

@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.provider.OpenableColumns
+import android.webkit.MimeTypeMap
 import com.example.fluffydisco.data.local.FluffyDiscoDatabase
 import com.example.fluffydisco.data.local.RecordingEntity
 import com.example.fluffydisco.data.storage.RecordingRepository
@@ -24,21 +25,25 @@ class AudioImportProcessor(
 
     suspend fun importAudio(sourceUri: Uri): String =
         withContext(Dispatchers.IO) {
+            // проверяем MIME-тип файла
+            val mimeType = context.contentResolver.getType(sourceUri)
+            if (mimeType != null && !mimeType.startsWith("audio/")) {
+                throw IllegalArgumentException("Invalid file type")
+            }
 
             val title = getFileName(sourceUri)
             val durationMs = getDuration(sourceUri)
+
+            val extension = getFileExtension(sourceUri)
 
             val directory = File(context.cacheDir, "imports")
             check(directory.exists() || directory.mkdirs()) {
                 "Cannot create import directory"
             }
 
-            // TODO: Add import progress reporting for large files.
-            // TODO: Support cancellation of an ongoing import.
-
             val temporaryFile = File.createTempFile(
                 "import_",
-                ".m4a",
+                ".$extension",
                 directory
             )
 
@@ -47,18 +52,12 @@ class AudioImportProcessor(
                     .openInputStream(sourceUri)
                     ?: error("Cannot open selected audio")
 
-                // TODO: Validate the actual audio format using metadata,
-                // instead of relying only on MIME type or file extension.
-
                 input.use { stream ->
                     temporaryFile.outputStream().use { output ->
                         stream.copyTo(output)
                     }
                 }
 
-                // RecordingRepository currently stores audio as M4A.
-                // TODO: Preserve the actual source format and MIME type.
-                // TODO: Avoid transcoding assumptions for MP3, WAV, OGG, etc.
                 val audioUri = repository.save(temporaryFile)
 
                 val id = UUID.randomUUID().toString()
@@ -74,7 +73,6 @@ class AudioImportProcessor(
                     )
                 )
 
-                // TODO: Display import and transcription as separate progress stages.
                 TranscriptionScheduler(context).enqueue(id)
 
                 id
@@ -92,31 +90,40 @@ class AudioImportProcessor(
             null
         )?.use { cursor ->
             if (cursor.moveToFirst()) {
-                val index = cursor.getColumnIndex(
-                    OpenableColumns.DISPLAY_NAME
-                )
-
+                val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
                 if (index >= 0) {
-                    return cursor.getString(index)
-                        ?: "Imported audio"
+                    return cursor.getString(index) ?: "Imported audio"
                 }
             }
         }
-
         return "Imported audio"
     }
 
     private fun getDuration(uri: Uri): Long {
         val retriever = MediaMetadataRetriever()
-
         return try {
             retriever.setDataSource(context, uri)
-
             retriever.extractMetadata(
                 MediaMetadataRetriever.METADATA_KEY_DURATION
             )?.toLongOrNull() ?: 0L
         } finally {
             retriever.release()
         }
+    }
+
+    private fun getFileExtension(uri: Uri): String {
+        val mimeType = context.contentResolver.getType(uri)
+        if (mimeType != null) {
+            val extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType)
+            if (extension != null) return extension
+        }
+
+        val fileName = getFileName(uri)
+        val extFromName = fileName.substringAfterLast('.', "")
+        if (extFromName.isNotEmpty()) {
+            return extFromName.lowercase()
+        }
+
+        return "m4a"
     }
 }

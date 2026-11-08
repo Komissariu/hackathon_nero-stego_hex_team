@@ -16,8 +16,6 @@ class TranscriptionWorker(
     companion object {
         const val KEY_RECORDING_ID = "recording_id"
         private const val TAG = "TranscriptionWorker"
-
-        // TODO: Make retry policy configurable.
         private const val MAX_ATTEMPTS = 3
     }
 
