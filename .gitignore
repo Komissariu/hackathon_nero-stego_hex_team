@@ -49,5 +49,4 @@ local.properties
 *.apk
 *.aab
 /src/mobile/android/local-models/
-ecapa_ru.onnx
-ecapa_ru.onnx.data
+
