@@ -1,0 +1,31 @@
+{
+  "modelId": "gigaam-v3-e2e-ctc-int8",
+  "archiveName": "gigaam-v3-e2e-ctc-int8.7z",
+  "archiveSizeBytes": 155314569,
+  "archiveSha256": "a803fc4f257df7b602b5b28325cf550577abf768893941cdf7c6c918c4915125",
+  "partSizeBytes": 40000000,
+  "partCount": 4,
+  "revision": "0928919f7df949871b507e16497b9e8cff7d0c6b",
+  "parts": [
+    {
+      "name": "gigaam-v3-e2e-ctc-int8.7z.part001",
+      "sizeBytes": 40000000,
+      "sha256": "b7f0b801978c9a0fd4c0203e87905744bef53f93f38abc52b4ab630fa3d1a853"
+    },
+    {
+      "name": "gigaam-v3-e2e-ctc-int8.7z.part002",
+      "sizeBytes": 40000000,
+      "sha256": "0617575d5fc621a6e616c723e09fff8c7106612a1fe7f4992a2f781bb28ec361"
+    },
+    {
+      "name": "gigaam-v3-e2e-ctc-int8.7z.part003",
+      "sizeBytes": 40000000,
+      "sha256": "70971def2d64d4706ce6d479a219276513ee6ecde2e5f1fc03bb44f0928d91e4"
+    },
+    {
+      "name": "gigaam-v3-e2e-ctc-int8.7z.part004",
+      "sizeBytes": 35314569,
+      "sha256": "15dc88ac82237a6694b213e11ec0a8761403fbbc1db438b29b098d697ca52a17"
+    }
+  ]
+}

@@ -21,7 +21,6 @@
     <string name="history_pending">Not transcribed</string>
 
     <string name="transcript_title">Transcript</string>
-    <string name="transcript_demo">Demo transcript</string>
     <string name="transcript_speaker">Speaker %1$d</string>
     <string name="transcript_recording_id">Recording #%1$s</string>
 
@@ -42,6 +41,52 @@
     <string name="settings_choose_folder">Choose folder</string>
     <string name="settings_reset_folder">Use default folder</string>
     <string name="settings_folder_error">Could not access this folder</string>
+    <string name="settings_audio_folder_title">Audio folder</string>
+    <string name="settings_audio_folder_description">Place to store original audio files. Default: Music/FluffyDisco.</string>
+    <string name="settings_audio_default_folder">Music/FluffyDisco</string>
+    <string name="settings_transcript_folder_title">Transcript folder</string>
+    <string name="settings_transcript_folder_description">Place to store speech recognition results. Default: Documents/FluffyDisco.</string>
+    <string name="settings_transcript_default_folder">Documents/FluffyDisco</string>
+    <string name="settings_models_title">Transcription models</string>
+    <string name="settings_model_selection_button">Choose model</string>
+    <string name="settings_model_downloads_button">Offline model installation</string>
+    <string name="settings_model_title">Transcription model</string>
+    <string name="settings_back_content_description">Back</string>
+    <string name="settings_model_selection_description">Choose the model to use for audio transcription.</string>
+    <string name="settings_model_selected">Selected</string>
+    <string name="settings_model_choose">Choose</string>
+    <string name="settings_model_downloads_title">Install model archives</string>
+    <string name="settings_model_downloads_description">Models packaged in this APK are installed locally without network access.</string>
+    <string name="settings_model_downloaded_message">%1$s downloaded</string>
+    <string name="settings_model_download_error">Download error: %1$s</string>
+    <string name="settings_model_delete_unavailable">Deleting %1$s is not available yet.</string>
+    <string name="settings_model_details">%1$s: %2$s</string>
+    <string name="settings_model_details_content_description">Details</string>
+    <string name="settings_model_not_ready">This model is not ready for download yet.</string>
+    <string name="settings_model_download">Download</string>
+    <string name="settings_model_downloaded">Downloaded</string>
+    <string name="settings_model_delete">Delete</string>
+    <string name="settings_model_not_bundled">This model archive is not included in this APK.</string>
+    <string name="settings_model_ready_to_install">Ready to install offline</string>
+    <string name="settings_model_corrupted">Installed files are incomplete or damaged.</string>
+    <string name="settings_model_incompatible">This model is not compatible with this device.</string>
+    <string name="settings_model_install">Install</string>
+    <string name="settings_model_installed">Installed</string>
+    <string name="settings_model_retry">Retry</string>
+    <string name="settings_model_installing">Installing model…</string>
+    <string name="settings_model_stage_copying">Copying bundled archive…</string>
+    <string name="settings_model_stage_verifying">Verifying archive…</string>
+    <string name="settings_model_stage_extracting">Extracting model files…</string>
+    <string name="settings_model_stage_validating">Checking required files…</string>
+    <string name="settings_model_stage_finalizing">Finishing installation…</string>
+    <string name="settings_model_install_error_missing">The model archive is missing from this APK.</string>
+    <string name="settings_model_install_error_space">Not enough free storage to install this model.</string>
+    <string name="settings_model_install_error_checksum">The model archive failed its integrity check.</string>
+    <string name="settings_model_install_error_archive">The model archive is damaged or unsupported.</string>
+    <string name="settings_model_install_error_files">Required model files are missing.</string>
+    <string name="settings_model_install_error_storage">Could not complete the model installation.</string>
+    <string name="settings_model_install_error_metadata">The model archive metadata is invalid.</string>
+    <string name="settings_model_no_bundled_archives">No compatible offline model archives are included in this APK.</string>
 
     <string name="recorder_recording">Recording…</string>
     <string name="recorder_saved">Recording saved</string>
@@ -61,12 +106,11 @@
     <string name="status_transcribed">Transcribed</string>
     <string name="status_failed">Processing failed</string>
     <string name="transcript_not_ready">Transcript is not available yet</string>
-    <string name="transcript_demo_warning">Demo transcript — not generated from audio</string>
     <string name="transcript_missing">Recording not found</string>
 
     <string name="import_success">Audio imported successfully</string>
     <string name="import_error">Could not import audio</string>
-    <string name="import_unsupported">Only M4A audio is supported for now</string>
+    <string name="import_unsupported">Invalid file type. Please select an audio file.</string>
 
     <string name="status_queued">Queued for transcription</string>
 
@@ -80,4 +124,14 @@
     <string name="recording_pause">Pause recording</string>
     <string name="recording_loading">Loading audio</string>
     <string name="recording_playback_error">Could not play audio</string>
+
+    <!-- Transcript JSON and deletion actions -->
+    <string name="recording_delete">Delete recording and audio</string>
+    <string name="transcript_delete">Delete transcript</string>
+    <string name="delete_recording_title">Delete recording?</string>
+    <string name="delete_recording_confirmation">The audio file and its transcript will be deleted. This action cannot be undone.</string>
+    <string name="delete_transcript_title">Delete transcript?</string>
+    <string name="delete_transcript_confirmation">Only the transcript will be deleted. The audio recording will remain.</string>
+    <string name="transcript_file_missing">Transcript file is missing or cannot be read.</string>
+    <string name="transcript_empty">The transcript contains no segments.</string>
 </resources>

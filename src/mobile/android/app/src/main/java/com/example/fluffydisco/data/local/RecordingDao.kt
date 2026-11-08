@@ -21,12 +21,14 @@ interface RecordingDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(recording: RecordingEntity)
 
-    @Query("""
+    @Query(
+        """
         UPDATE recordings
         SET status = :status,
             transcriptUri = :transcriptUri
         WHERE id = :id
-    """)
+    """
+    )
     suspend fun updateTranscription(
         id: String,
         status: String,

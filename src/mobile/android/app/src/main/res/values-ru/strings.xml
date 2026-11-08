@@ -21,7 +21,6 @@
     <string name="history_pending">Не расшифровано</string>
 
     <string name="transcript_title">Расшифровка</string>
-    <string name="transcript_demo">Демонстрационная расшифровка</string>
     <string name="transcript_speaker">Участник %1$d</string>
     <string name="transcript_recording_id">Запись №%1$s</string>
 
@@ -42,6 +41,52 @@
     <string name="settings_choose_folder">Выбрать папку</string>
     <string name="settings_reset_folder">Использовать стандартную папку</string>
     <string name="settings_folder_error">Не удалось получить доступ к папке</string>
+    <string name="settings_audio_folder_title">Папка аудиозаписей</string>
+    <string name="settings_audio_folder_description">Место хранения исходных аудиофайлов. По умолчанию: Музыка/FluffyDisco.</string>
+    <string name="settings_audio_default_folder">Музыка/FluffyDisco</string>
+    <string name="settings_transcript_folder_title">Папка транскрипций</string>
+    <string name="settings_transcript_folder_description">Место сохранения результатов распознавания речи. По умолчанию: Документы/FluffyDisco.</string>
+    <string name="settings_transcript_default_folder">Документы/FluffyDisco</string>
+    <string name="settings_models_title">Модели распознавания</string>
+    <string name="settings_model_selection_button">Выбор модели</string>
+    <string name="settings_model_downloads_button">Установка моделей без интернета</string>
+    <string name="settings_model_title">Модель распознавания</string>
+    <string name="settings_back_content_description">Назад</string>
+    <string name="settings_model_selection_description">Выберите модель, которая будет использоваться для распознавания аудио.</string>
+    <string name="settings_model_selected">Выбрана</string>
+    <string name="settings_model_choose">Выбрать</string>
+    <string name="settings_model_downloads_title">Установка архивов моделей</string>
+    <string name="settings_model_downloads_description">Модели из APK устанавливаются локально, без доступа к сети.</string>
+    <string name="settings_model_downloaded_message">%1$s загружена</string>
+    <string name="settings_model_download_error">Ошибка загрузки: %1$s</string>
+    <string name="settings_model_delete_unavailable">Удаление %1$s пока не подключено.</string>
+    <string name="settings_model_details">%1$s: %2$s</string>
+    <string name="settings_model_details_content_description">Подробнее</string>
+    <string name="settings_model_not_ready">Модель пока не подготовлена к загрузке.</string>
+    <string name="settings_model_download">Скачать</string>
+    <string name="settings_model_downloaded">Загружена</string>
+    <string name="settings_model_delete">Удалить</string>
+    <string name="settings_model_not_bundled">Архив этой модели не включён в APK.</string>
+    <string name="settings_model_ready_to_install">Готова к установке без интернета</string>
+    <string name="settings_model_corrupted">Установленные файлы неполные или повреждены.</string>
+    <string name="settings_model_incompatible">Эта модель несовместима с устройством.</string>
+    <string name="settings_model_install">Установить</string>
+    <string name="settings_model_installed">Установлена</string>
+    <string name="settings_model_retry">Повторить</string>
+    <string name="settings_model_installing">Установка модели…</string>
+    <string name="settings_model_stage_copying">Копирование встроенного архива…</string>
+    <string name="settings_model_stage_verifying">Проверка архива…</string>
+    <string name="settings_model_stage_extracting">Распаковка файлов модели…</string>
+    <string name="settings_model_stage_validating">Проверка необходимых файлов…</string>
+    <string name="settings_model_stage_finalizing">Завершение установки…</string>
+    <string name="settings_model_install_error_missing">Архив модели отсутствует в APK.</string>
+    <string name="settings_model_install_error_space">Недостаточно свободного места для установки модели.</string>
+    <string name="settings_model_install_error_checksum">Архив модели не прошёл проверку целостности.</string>
+    <string name="settings_model_install_error_archive">Архив модели повреждён или не поддерживается.</string>
+    <string name="settings_model_install_error_files">Не найдены обязательные файлы модели.</string>
+    <string name="settings_model_install_error_storage">Не удалось завершить установку модели.</string>
+    <string name="settings_model_install_error_metadata">Некорректны метаданные архива модели.</string>
+    <string name="settings_model_no_bundled_archives">В этом APK нет совместимых автономных архивов моделей.</string>
 
     <string name="recorder_recording">Идёт запись…</string>
     <string name="recorder_saved">Запись сохранена</string>
@@ -61,12 +106,11 @@
     <string name="status_transcribed">Расшифровано</string>
     <string name="status_failed">Ошибка обработки</string>
     <string name="transcript_not_ready">Расшифровка пока недоступна</string>
-    <string name="transcript_demo_warning">Демонстрационная расшифровка — не создана по аудио</string>
     <string name="transcript_missing">Запись не найдена</string>
 
     <string name="import_success">Аудиофайл успешно импортирован</string>
     <string name="import_error">Не удалось импортировать аудио</string>
-    <string name="import_unsupported">Пока поддерживается только аудио M4A</string>
+    <string name="import_unsupported">Некорректный тип файла. Пожалуйста, выберите аудиофайл.</string>
 
     <string name="status_queued">В очереди на расшифровку</string>
 
@@ -80,4 +124,14 @@
     <string name="recording_pause">Приостановить запись</string>
     <string name="recording_loading">Загрузка аудио</string>
     <string name="recording_playback_error">Не удалось воспроизвести аудио</string>
+
+    <!-- Transcript JSON and deletion actions -->
+    <string name="recording_delete">Удалить запись и аудио</string>
+    <string name="transcript_delete">Удалить расшифровку</string>
+    <string name="delete_recording_title">Удалить запись?</string>
+    <string name="delete_recording_confirmation">Аудиофайл и его расшифровка будут удалены. Это действие нельзя отменить.</string>
+    <string name="delete_transcript_title">Удалить расшифровку?</string>
+    <string name="delete_transcript_confirmation">Будет удалена только расшифровка. Аудиозапись останется.</string>
+    <string name="transcript_file_missing">Файл расшифровки отсутствует или не читается.</string>
+    <string name="transcript_empty">В расшифровке нет реплик.</string>
 </resources>

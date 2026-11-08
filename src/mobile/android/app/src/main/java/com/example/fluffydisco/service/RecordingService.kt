@@ -154,7 +154,6 @@ class RecordingService : Service() {
 
                 dao.insert(recording)
 
-                // TODO: Show transcription queue state in the recording details UI.
                 TranscriptionScheduler(applicationContext)
                     .enqueue(recordingId)
 

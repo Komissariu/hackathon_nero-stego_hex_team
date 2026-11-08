@@ -14,19 +14,35 @@ private val Context.storageDataStore by preferencesDataStore(
 class StoragePreferences(
     private val context: Context
 ) {
-    private val folderKey = stringPreferencesKey("recordings_folder_uri")
+    private val audioFolderKey = stringPreferencesKey("recordings_folder_uri")
+    private val transcriptFolderKey = stringPreferencesKey("transcripts_folder_uri")
 
     val folderUri: Flow<Uri?> =
         context.storageDataStore.data.map { preferences ->
-            preferences[folderKey]?.let(Uri::parse)
+            preferences[audioFolderKey]?.let(Uri::parse)
+        }
+
+    val transcriptFolderUri: Flow<Uri?> =
+        context.storageDataStore.data.map { preferences ->
+            preferences[transcriptFolderKey]?.let(Uri::parse)
         }
 
     suspend fun setFolder(uri: Uri?) {
         context.storageDataStore.edit { preferences ->
             if (uri == null) {
-                preferences.remove(folderKey)
+                preferences.remove(audioFolderKey)
             } else {
-                preferences[folderKey] = uri.toString()
+                preferences[audioFolderKey] = uri.toString()
+            }
+        }
+    }
+
+    suspend fun setTranscriptFolder(uri: Uri?) {
+        context.storageDataStore.edit { preferences ->
+            if (uri == null) {
+                preferences.remove(transcriptFolderKey)
+            } else {
+                preferences[transcriptFolderKey] = uri.toString()
             }
         }
     }
